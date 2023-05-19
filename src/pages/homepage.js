@@ -1,3 +1,7 @@
+console.time('allhomepage');
+
+console.time('import');
+
 import useSite from 'hooks/use-site';
 import { WebsiteJsonLd } from 'lib/json-ld';
 
@@ -11,10 +15,15 @@ import styles from 'styles/pages/Home.module.scss';
 import { getApolloClient } from 'lib/apollo-client';
 import { gql } from '@apollo/client';
 
-export default function Home({ page }) {
+console.timeEnd('import');
+
+export default function Homepage({ page }) {
+  console.time('homepage');
+
   const { metadata = {} } = useSite();
   const { title, description } = metadata;
-  console.log(page);
+
+  console.timeEnd('homepage');
 
   return (
     <Layout>
@@ -50,6 +59,8 @@ export default function Home({ page }) {
 }
 
 export async function getStaticProps() {
+  console.time('getStaticProps');
+
   const apolloClient = getApolloClient();
 
   const QUERY_PAGE_ACF_BY_URI = gql`
@@ -71,16 +82,20 @@ export async function getStaticProps() {
   let pageData;
 
   try {
+    console.time('datafetch');
+
     pageData = await apolloClient.query({
       query: QUERY_PAGE_ACF_BY_URI,
     });
+    console.timeEnd('datafetch');
   } catch (e) {
     console.log(`[pages][getPageByUri] Failed to query page data: ${e.message}`);
     throw e;
   }
 
   const page = pageData?.data.page;
-  console.log(page);
+
+  console.timeEnd('getStaticProps');
 
   return {
     props: {
@@ -89,3 +104,4 @@ export async function getStaticProps() {
     revalidate: 10,
   };
 }
+console.timeEnd('allhomepage');

@@ -32,6 +32,8 @@ function App({ Component, pageProps = {}, metadata, recentPosts, categories, men
 }
 
 App.getInitialProps = async function (appContext) {
+  console.time('getInitialProps');
+
   const appProps = await NextApp.getInitialProps(appContext);
 
   const { posts: recentPosts } = await getRecentPosts({
@@ -44,6 +46,8 @@ App.getInitialProps = async function (appContext) {
   });
 
   const { menus = [] } = await getAllMenus();
+
+  console.timeEnd('getInitialProps');
 
   return {
     ...appProps,

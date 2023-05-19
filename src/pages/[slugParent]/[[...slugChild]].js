@@ -157,7 +157,7 @@ export async function getStaticPaths() {
   // as they have the same path, which will fail the build
 
   const paths = pages
-    .filter(({ uri }) => typeof uri === 'string' && uri !== '/')
+    .filter(({ uri }) => typeof uri === 'string' && !['/', '/homepage/'].includes(uri))
     .map(({ uri }) => {
       const segments = uri.split('/').filter((seg) => seg !== '');
 
